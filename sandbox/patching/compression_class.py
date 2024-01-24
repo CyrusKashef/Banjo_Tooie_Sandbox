@@ -177,10 +177,11 @@ class COMPRESSION_CLASS(Generic_Bin_File_Class):
         Creates a decompressed version of a compressed file.
         '''
         # Remove Decompress Size & Padding
-        for byte_count, curr_byte in enumerate(reversed(self._file_content)):
-            if(curr_byte != 0xAA):
-                break
-        file_content = self._file_content[2:-byte_count]
+        # for byte_count, curr_byte in enumerate(reversed(self._file_content)):
+        #     if(curr_byte != 0xAA):
+        #         break
+        # file_content = self._file_content[2:-byte_count]
+        file_content = self._file_content[2:]
         if(decrypt_bool):
             file_size:int = len(file_content)
             file_content= self._decrypt_file(asset_id, file_content, file_size)

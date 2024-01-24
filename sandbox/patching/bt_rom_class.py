@@ -99,10 +99,15 @@ class BT_ROM_CLASS(Generic_Bin_File_Class):
         '''
         Pass
         '''
-        for asset_id in range(self._ASSET_ID_START, self._ASSET_ID_END, self._ASSET_TABLE_INTERVAL):
+        for asset_id in range(
+                self._ASSET_ID_START,
+                self._ASSET_ID_END,
+                self._ASSET_TABLE_INTERVAL):
             try:
                 pointer_index_start:int = self._ASSET_TABLE_START_INDEX + 4 * asset_id
-                if(asset_id % 1 == 0):
+                if(asset_id >= 0x9F4 and asset_id < 0xB34):
+                    continue
+                if(asset_id % 500 == 0):
                     asset_id_hex_str:str = self._convert_int_to_hex_str(asset_id, 2)
                     pointer_hex_str:str = self._convert_int_to_hex_str(pointer_index_start, byte_count=4)
                     print(f"DEBUG: extract_asset_table_pointers: Asset Id '{asset_id_hex_str}' -> Pointer Address'{pointer_hex_str}'")
@@ -111,8 +116,6 @@ class BT_ROM_CLASS(Generic_Bin_File_Class):
                     self._extract_asset_by_pointer(pointer_index_start, file_name)
                 compressed_obj = COMPRESSION_CLASS(file_name, self._COMPRESSED_STR)
                 decrypt_bool:bool = False
-                # if(asset_id > 0x955):
-                #     decrypt_bool = True
                 compressed_obj.decompress_file_main(asset_id, decrypt_bool)
             except zlib.error as err:
                 print(f"debug_pointer_index_start: {debug_pointer_index_start}")
